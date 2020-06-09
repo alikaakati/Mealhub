@@ -1,0 +1,30 @@
+﻿@model MealHubProject.ViewModels.OrderCustomersViewModel
+@{
+    ViewBag.Title = "ViewMyOrders";
+}
+
+<table>
+    <tr>
+        <td>Order ID</td>
+        <td>Ordered by</td>
+        <td>Address</td>
+        <td>Details</td>
+        <td>Price</td>
+        <td>Status</td>
+    </tr>
+
+    @for (int i = 0; i < Model.orders.Count; i++)
+    {
+        <tr>
+            <td>@Model.orders[i].Id</td>
+            <td>@Model.restaurants[i].Username</td>
+            <td>@Model.orders[i].Address</td>
+            <td>@Model.orders[i].Details</td>
+            <td>@Model.orders[i].Total</td>
+            <td>@Model.orders[i].Status</td>
+
+
+        </tr>
+    }
+</table>
+

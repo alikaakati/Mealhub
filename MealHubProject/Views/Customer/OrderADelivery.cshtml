@@ -1,0 +1,16 @@
+﻿@model MealHubProject.ViewModels.OrderViewModel
+@{
+    ViewBag.Title = "OrderADelivery";
+}
+
+
+@using (Html.BeginForm("SendOrder", "Customer"))
+{   
+    <h1>Dear @Model.customer.Username,<br />You are ordering from @Model.restaurant.Username</h1>
+    <label>Address</label>
+    @Html.TextBoxFor(m=>m.order.Address)
+    <br />
+    <label>Details</label>
+    @Html.TextBoxFor(m => m.order.Details)
+    <button type="submit" class="btn btn-primary" style="display:block;">Submit</button>
+}

@@ -1,0 +1,38 @@
+﻿@model MealHubProject.ViewModels.OrderListViewModel
+@{
+    ViewBag.Title = "ViewOrders";
+}
+
+    <table>
+        <tr>
+            <td>Order ID</td>
+            <td>Ordered by</td>
+            <td>Address</td>
+            <td>Details</td>
+            <td>Price</td>
+            <td>Status</td>
+            <td>Action</td>
+        </tr>
+
+        @for (int i = 0; i < Model.orders.Count; i++)
+        {
+            <tr>
+                <td>@Model.orders[i].Id</td>
+                <td>@Model.customers[i].Username</td>
+                <td>@Model.orders[i].Address</td>
+                <td>@Model.orders[i].Details</td>
+                <td>@Model.orders[i].Total</td>
+                <td>@Model.orders[i].Status</td>
+                <td>
+                    @if (Model.orders[i].Status == "Pending")
+                    {
+                        <a href="/Restaurant/AcceptOrder/@Model.orders[i].Id"><button>Accept</button></a>
+                        <a href="/Restaurant/RefuseOrder/@Model.orders[i].Id"><button>Refuse</button></a>
+                        
+                    }
+
+                </td>
+                
+            </tr>
+        }
+    </table>

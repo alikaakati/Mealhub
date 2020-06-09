@@ -1,0 +1,12 @@
+﻿@model MealHubProject.ViewModels.OrderViewModel
+@{
+    ViewBag.Title = "SendOrder";
+}
+
+<h2>Your order was sent</h2>
+<h5><b>Customer name : </b> @Model.customer.Username</h5>
+<h5><b>Customer address : </b> @Model.order.Address</h5>
+<h5><b>Restaurant name : </b> @Model.restaurant.Username</h5>
+<h5><b>Order Details : </b>@Model.order.Details</h5>
+<h5><b></b></h5>
+<h7>You can view your order in your orders list<br />You will be notified when your order is accepted</h7>

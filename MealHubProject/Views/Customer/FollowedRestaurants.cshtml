@@ -1,0 +1,40 @@
+﻿@model List<MealHubProject.Models.Restaurant>
+@{
+    ViewBag.Title = "FollowedRestaurants";
+}
+
+<h1>Followed Restaurants</h1>
+<table>
+    <tr>
+        <td>
+            Restaurant name
+        </td>
+        <td>
+            Restaurant number
+        </td>
+        <td>
+            View details
+        </td>
+        <td>
+            Order
+        </td>
+    </tr>
+    @foreach (var restaurant in Model)
+    {
+<tr>
+    <td>
+        @restaurant.Username
+    </td>
+    <td>
+        @restaurant.Phone
+    </td>
+    <td>
+    <td>
+        <a href="/Customer/FollowedRestaurants/Details/@restaurant.Username"><button>View details</button></a></td>
+    </td>
+    <td>
+        <a href="../Customer/OrderADelivery/@restaurant.Username"><button>Order</button></a>
+    </td>
+</tr>
+    }
+</table>
