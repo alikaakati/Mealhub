@@ -1,0 +1,42 @@
+﻿@model MealHubProject.ViewModels.ProductsListViewModel
+@{
+    ViewBag.Title = "ViewMenu";
+}
+<h1>
+
+</h1>
+<h2>
+    You are Viewing @Model.restaurant.Username's menu.
+</h2>
+<table class="products table" id="myTableId">
+    <thead>
+        <tr>
+            <th>Product ID </th>
+            <th>Product name</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var x in Model.Products)
+        {
+            <tr>
+                <td>@x.Id</td>
+                <td>@x.Name</td>
+                <td>@x.Category</td>
+                <td>@x.Description</td>
+                <td>@x.Price</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $("#myTableId").dataTable();
+        });
+    </script>
+}

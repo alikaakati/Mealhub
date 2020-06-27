@@ -4,13 +4,88 @@
 }
 
 
-@using (Html.BeginForm("SendOrder", "Customer"))
-{   
-    <h1>Dear @Model.customer.Username,<br />You are ordering from @Model.restaurant.Username</h1>
-    <label>Address</label>
-    @Html.TextBoxFor(m=>m.order.Address)
-    <br />
-    <label>Details</label>
-    @Html.TextBoxFor(m => m.order.Details)
-    <button type="submit" class="btn btn-primary" style="display:block;">Submit</button>
+<table class="products table" id="myTableId">
+    <thead>
+        <tr>
+            <th>Product name</th>
+            <th>Category</th>
+            <th>Add to cart</th>
+
+        </tr>
+    </thead>
+    <tbody>
+
+        @for (int i = 0; i < Model.products.Count; i++)
+        {
+            <tr>
+                <td>@Model.products[i].Name</td>
+                <td>@Model.products[i].Price</td>
+                <td>
+                    @using (Html.BeginForm("AddToCart", "Customer"))
+                    {
+                        @Html.HiddenFor(c => c.products[i].Id)
+                        <a href="../AddToCart/@Model.restaurant.Id/@Model.products[i].Id" class="btn btn-primary">Add to Cart</a>
+
+                    }
+                </td>
+
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+<table class="table table-bordered table-hover table-dark" id="MyItems">
+    <thead class="thead-dark">
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Remove product</th>
+        </tr>
+    </thead>
+    <tbody class="cartbody">
+    </tbody>
+</table>
+@using (Html.BeginForm("ContinueToAddress", "Customer"))
+{
+    <button class="btn btn-primary">
+        Continue
+    </button>
+
+}
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $("#myTableId").dataTable();
+
+
+
+            $("#MyItems").dataTable({
+                ajax: {
+                    url: "../../Api/ProductsToOrder",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "Name",
+                    },
+                    {
+                        data: "Price",
+                        render: function (data) {
+                            return "<span class='price'>" + data + "$</span>";
+                        }
+                    },
+                    {
+                        data: "Id",
+                        render: function (data) {
+                            return "<a href='../RemoveFromCart/" + data + "' class='btn btn-danger'>Remove</a>";
+                        }
+                    },
+
+                ]
+            });
+
+
+        });
+    </script>
 }

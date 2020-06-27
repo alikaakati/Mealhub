@@ -1,0 +1,31 @@
+﻿@model MealHubProject.Models.Restaurant
+@{
+    ViewBag.Title = "AddRestaurant";
+}
+<h1></h1>
+    <button type="submit" class="btn btn-primary" style="display:block;">Submit</button>
+
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $(".btn").on("click", function () {
+                $.ajax({
+                    url: '../Api/Restaurants/',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data:{
+                        Username: 'newrestaurant',
+                        Phone: '01554666',
+                        Email: 'email@mail.com',
+                        ApplicationUserId:'test'
+                    }
+                });
+                console.log("Worked");
+            });
+        });
+
+    </script>
+    
+    
+    }

@@ -1,0 +1,15 @@
+﻿@model MealHubProject.Models.Order
+@{
+    ViewBag.Title = "ContinueToAddress";
+}
+
+@using (Html.BeginForm("SubmitOrder", "Customer"))
+{
+    @Html.TextBoxFor(c=>c.Address,new { placeholder="Address" })
+    <p>If empty we will use your home address</p>
+    @Html.TextBoxFor(c=>c.Details, new { placeholder = "Description"})
+    <button>
+        Submit
+    </button>
+}
+

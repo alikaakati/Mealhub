@@ -4,37 +4,50 @@
 }
 
 <h1>Followed Restaurants</h1>
-<table>
-    <tr>
-        <td>
-            Restaurant name
-        </td>
-        <td>
-            Restaurant number
-        </td>
-        <td>
-            View details
-        </td>
-        <td>
-            Order
-        </td>
-    </tr>
-    @foreach (var restaurant in Model)
-    {
-<tr>
-    <td>
-        @restaurant.Username
-    </td>
-    <td>
-        @restaurant.Phone
-    </td>
-    <td>
-    <td>
-        <a href="/Customer/FollowedRestaurants/Details/@restaurant.Username"><button>View details</button></a></td>
-    </td>
-    <td>
-        <a href="../Customer/OrderADelivery/@restaurant.Username"><button>Order</button></a>
-    </td>
-</tr>
-    }
+<table class="table">
+    <thead>
+        <tr>
+            <th>Restaurant name</th>
+            <th>View profile</th>
+            <th>Make an order</th>
+            <th>Unfollow</th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @foreach (var restaurant in Model)
+        {
+            <tr>
+                <td>
+                    <b>@restaurant.Username</b>
+                </td>
+                <td>
+                    <a href="/Customer/FollowedRestaurants/Details/@restaurant.Username">
+                        <button class="btn btn-primary">View Profile</button>
+                    </a>
+                </td>
+
+
+
+                <td>
+                    <a href="/Customer/OrderADelivery/@restaurant.Username">
+                        <button class="btn btn-primary">Order</button>
+                    </a>
+                </td>
+                <td>
+                    <a href="Unfollow/@restaurant.Id" class="btn btn-primary">
+                        Unfollow
+                    </a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
 </table>
+@section scripts{
+    <script>
+    $(document).ready(function () {
+        $(".table").dataTable();
+    });
+    </script>
+}

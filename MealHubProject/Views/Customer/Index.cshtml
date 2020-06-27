@@ -1,7 +1,65 @@
-﻿
+﻿@model MealHubProject.Models.Customer
 @{
     ViewBag.Title = "Index";
 }
+<html>
+<head>
+    <style>
+        .navb-grid{
+            display:grid;
+            grid-template-columns:1fr 1fr 1fr 1fr 1fr;
+            align-items:center;
+            justify-content:center;
+            align-content:center;
+            height:10vh;
+            background-color:red;
+            padding-left:0px;
+            grid-gap:0.1fr;
+                }
+        .navb-grid>*{
+            margin:auto;
+        }
+        .navb-grid>div>a{
+            
+            color:white;
+            font-size:1.5vw;
+            text-decoration:none;
+            cursor:pointer;
+            transition:250ms;
+            }
+        .navb-grid > div  :hover {
+            color:gold;
 
-<h2>Hello</h2>
+        }
+    </style>
+</head>
+<body>
+    <div class="navb-grid">
+        <div>
+            <a href="AvailableRestaurants">
+                Avaiable restaurants
+            </a>
+        </div>
+        <div>
+            <a href="FollowedRestaurants">
+                Followed Restaurants
+            </a>
+        </div>
+        <div>
+            <a>
+                My orders
+            </a>
+        </div>
+        <div>
+            <a>
+                Make an order
+            </a>
+        </div>
+        <div class="navbar-collapse collapse" style="margin-right:2vw;margin-top:-2vh;">
+            @Html.Partial("_LoginPartial")
+        </div>
+    </div>
+
+</body>
+</html>
 

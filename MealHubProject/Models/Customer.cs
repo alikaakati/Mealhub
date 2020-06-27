@@ -18,7 +18,9 @@ namespace MealHubProject.Models
         [Display(Name = "Phone")]
         public int Phone { get; set; }
 
-        
+        public string Email { get; set; }
+
+        public string Address { get; set; }
         public virtual ApplicationUser customer { get; set; }
         
         [Required]

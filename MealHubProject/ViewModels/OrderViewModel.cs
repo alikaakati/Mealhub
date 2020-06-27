@@ -10,6 +10,8 @@ namespace MealHubProject.ViewModels
     {
         public Customer customer { get; set; }
         public Restaurant restaurant { get; set; }
+        public List<Product> products { get; set; }
         public Order order { get; set; }
+        public string ids { get; set; }
     }
 }

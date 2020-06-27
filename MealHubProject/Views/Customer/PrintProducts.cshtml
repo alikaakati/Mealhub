@@ -1,0 +1,9 @@
+﻿@model MealHubProject.ViewModels.OrderViewModel
+@{
+    ViewBag.Title = "PrintProducts";
+}
+
+@foreach (var x in Model.products)
+{
+    @x.Description
+}

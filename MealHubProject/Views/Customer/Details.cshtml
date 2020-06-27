@@ -1,0 +1,41 @@
+﻿@model MealHubProject.ViewModels.ProductsListViewModel
+@{
+    ViewBag.Title = "Details";
+}
+
+<h3>
+    Restaurant name : <b>@Model.restaurant.Username</b> <br />
+    Email: <b>@Model.restaurant.Email</b> <br />
+    Phone number : <b>@Model.restaurant.Phone</b> <br />
+    Address : <b>@Model.restaurant.Address</b> <br />
+</h3>
+<table class="products table" id="myTableId">
+    <thead>
+        <tr>
+            <th>Product name</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var x in Model.Products)
+        {
+            <tr>
+                <td>@x.Name</td>
+                <td>@x.Category</td>
+                <td>@x.Description</td>
+                <td>@x.Price</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $("#myTableId").dataTable();
+        });
+    </script>
+}

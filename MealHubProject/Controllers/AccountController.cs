@@ -79,6 +79,22 @@ namespace MealHubProject.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    var db = new ApplicationDbContext();
+                    var isRestaurant = db.Restaurants.SingleOrDefault(c => c.Email == model.Email);
+                    var isCustomer = db.Customers.SingleOrDefault(c => c.Email == model.Email);
+                    var isAdmin = db.Admins.SingleOrDefault(c => c.Email == model.Email);
+                    if(isAdmin != null)
+                    {
+                        return RedirectToAction("Index", "Admin");
+                    }
+                    if (isRestaurant != null)
+                    {
+                        return RedirectToAction("Index","Restaurant");
+                    }
+                    if(isCustomer != null)
+                    {
+                        return RedirectToAction("Index","Customer");
+                    }
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -157,7 +173,8 @@ namespace MealHubProject.Controllers
                 {
                     Username = model.Username,
                     Phone = model.Phone,
-                    ApplicationUserId = user.Id
+                    ApplicationUserId = user.Id,
+                    Email = model.Email
                 };
                 var check = db.Customers.SingleOrDefault(c => c.Username == model.Username);
                 if (check != null)
@@ -169,7 +186,8 @@ namespace MealHubProject.Controllers
                     if (result.Succeeded)
                     {
 
-
+                    db.Customers.Add(myCustomer);
+                    db.SaveChanges();
 
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 

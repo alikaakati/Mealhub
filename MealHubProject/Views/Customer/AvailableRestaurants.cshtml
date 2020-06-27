@@ -1,0 +1,131 @@
+﻿
+@{
+    ViewBag.Title = "AvailableRestaurants";
+}
+<html>
+<head>
+    <style>
+                .navb-grid{
+            display:grid;
+            grid-template-columns:1fr 1fr 1fr 1fr 1fr;
+            align-items:center;
+            justify-content:center;
+            align-content:center;
+            height:10vh;
+            background-color:red;
+            padding-left:0px;
+            grid-gap:0.1fr;
+                }
+        .navb-grid>*{
+            margin:auto;
+        }
+        .navb-grid>div>a{
+            
+            color:white;
+            font-size:1.5vw;
+            text-decoration:none;
+            cursor:pointer;
+            transition:250ms;
+            }
+        .navb-grid > div  :hover {
+            color:gold;
+
+        }
+        .tbdiv{
+            padding:15px;
+        }
+        table{
+            margin-left:2vw;
+        }
+    </style>
+</head>
+<body>
+    <div class="navb-grid">
+        <div>
+            <a href="AvailableRestaurants">
+                Avaiable restaurants
+            </a>
+        </div>
+        <div>
+            <a>
+                Followed Restaurants
+            </a>
+        </div>
+        <div>
+            <a>
+                My orders
+            </a>
+        </div>
+        <div>
+            <a>
+                Make an order
+            </a>
+        </div>
+        <div class="navbar-collapse collapse" style="margin-right:2vw;margin-top:-2vh;">
+            @Html.Partial("_LoginPartial")
+        </div>
+    </div>
+    <div class="tbdiv">
+    <table id="restaurants" class="table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>View menu</th>
+                <th>Follow</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    </div>
+
+</body>
+</html>
+<h1></h1>
+
+
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+            $("#restaurants").dataTable({
+                ajax: {
+                    url: "../Api/UnfollowedRestaurants",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "Username",
+                    },
+                    {
+                        data: "Phone",
+                    },
+                    {
+                        data:"Address"
+                    },
+                    {
+                        data: "Id",
+                        render: function (data) {
+                            return "<a href='../Admin/ViewMenu/" + data + "'><button class='btn btn-primary'>View menu</button></a>";
+
+                        }
+                    },
+                    {
+                        data: "Id",
+                        render: function (data) {
+                            return "<a href='./Follow/" + data + "' class='btn btn-primary'>Follow</a>";
+                        }
+                    },
+
+                ]
+            });
+
+
+        });
+    </script>
+}
+

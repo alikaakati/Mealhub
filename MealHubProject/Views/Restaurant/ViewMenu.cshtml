@@ -1,7 +1,58 @@
-﻿
+﻿@model MealHubProject.ViewModels.ProductsListViewModel
 @{
     ViewBag.Title = "ViewMenu";
 }
+<table id="menu" class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Discount</th>
+            <th>Delete Item</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            @foreach (var product in Model.Products)
+            {
+                <td>@product.Id</td>
+                <td>@product.Name</td>
+                <td>@product.Category</td>
+                <td>@product.Description</td>
+                <td>@product.Discount%</td>
+                <td><button</a></td>
 
-<h2>ViewMenu</h2>
+            }
+        </tr>
+    </tbody>
+</table>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $("#menu").on("click", ".delete", function () {
+                button = $(this);
+                bootbox.confirm("Are you sure you want to delete this restaurant?", function (result) {
+
+                    if (result) {
+                        $.ajax({
+                            url: "../Api/Restaurants/" + button.attr("data-restaurant-id"),
+                            method: "GET",
+                            success: function () {
+                                button.parents("tr").remove();
+                            }
+                        });
+                    }
+                })
+            });
+
+            $("#menu").dataTable();
+
+
+        });
+    </script>
+}
+
 

@@ -1,0 +1,78 @@
+﻿
+@{
+    ViewBag.Title = "GetRestaurants";
+}
+<h1></h1>
+<table id="restaurants" class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>View menu</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>
+
+
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $("#restaurants").on("click", ".delete", function () {
+                button = $(this);
+                bootbox.confirm("Are you sure you want to delete this restaurant?", function (result) {
+                    
+                    if (result) {
+                        $.ajax({
+                            url: "../Api/Restaurants/" + button.attr("data-restaurant-id"),
+                            method: "GET",
+                            success: function () {
+                                button.parents("tr").remove();
+                            }
+                        });
+                    }
+                })
+            });
+
+            $("#restaurants").dataTable({
+                ajax: {
+                    url: "../Api/Restaurants",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "Id",
+                    },
+                    {
+                        data: "Username",
+                    },
+                    {
+                        data: "Email",
+                    },
+                    {
+                        data: "Id",
+                        render: function (data) {
+                            return "<a href='../Admin/ViewMenu/" + data + "'><button class='btn btn-primary'>View menu</button></a>";
+                        
+                        }
+                    },
+                    {
+                        data: "Id",
+                        render: function (data) {
+                            return "<button class='delete btn btn-danger' data-restaurant-id=" + data + ">Delete</button>";
+                        }
+                    },
+
+                ]
+            });
+
+
+        });
+    </script>
+}
+

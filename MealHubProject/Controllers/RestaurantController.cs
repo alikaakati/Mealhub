@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace MealHubProject.Controllers
 {
+    [Authorize(Roles = "Restaurant")]
     public class RestaurantController : Controller
     {
         private ApplicationDbContext db;
@@ -26,13 +27,25 @@ namespace MealHubProject.Controllers
         {
             return View();
         }
-        [Route("Restaurant/ViewMenu")]
-        public ActionResult ViewMenu()
+        [Route("Restaurant/ViewMenu/{id}")]
+        public ActionResult ViewMenu(int id)
+        {
+            var restaurant = db.Restaurants.SingleOrDefault(c => c.Id == id);
+            var products = (from p in db.Products
+                            join r in db.Restaurants on p.restaurantID equals r.Id
+                            where r.Id == id
+                            select p).ToList();
+            ProductsListViewModel list = new ProductsListViewModel();
+            list.Products = products;
+            list.restaurant = restaurant;
+            return View(list);
+        }
+
+        [Route("Restaurant/AddItem")]
+        public ActionResult AddItem()
         {
             return View();
         }
-
-
         [Route("Restaurant/UpdateMenu")]
         public ActionResult UpdateMenu()
         {
@@ -77,6 +90,13 @@ namespace MealHubProject.Controllers
             db.SaveChanges();
             return RedirectToAction("ViewOrders","Restaurant");
         }
+
+        [Route("Restaurant/DoAddItem")]
+        public ActionResult DoAddItem(Product p)
+        {
+            return RedirectToAction("ViewMenu","Restaurant");
+        }
+
     }
 
 
