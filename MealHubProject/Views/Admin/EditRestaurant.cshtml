@@ -1,0 +1,23 @@
+﻿@model MealHubProject.Models.Restaurant
+@{
+    ViewBag.Title = "EditRestaurant";
+}
+<div class="container">
+    @using (Html.BeginForm("UpdateRestaurant", "Admin"))
+    {
+        @Html.TextBoxFor(c => c.Username)
+        <br />
+
+        @Html.TextBoxFor(c => c.Email, new { disabled = "disabled", @readonly = "readonly" })
+        <br />
+
+        @Html.TextBoxFor(c => c.Phone)
+        <br />
+
+        @Html.TextBoxFor(c => c.Address)
+        <br />
+        <button type="submit" class="btn btn-primary submit">Submit</button>
+
+    }
+</div>
+

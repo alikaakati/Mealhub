@@ -4,69 +4,110 @@
 }
 <html>
 <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <style>
-                .navb-grid{
-            display:grid;
-            grid-template-columns:1fr 1fr 1fr 1fr 1fr;
-            align-items:center;
-            justify-content:center;
-            align-content:center;
-            height:10vh;
-            background-color:red;
-            padding-left:0px;
-            grid-gap:0.1fr;
-                }
-        .navb-grid>*{
-            margin:auto;
+        body{
         }
-        .navb-grid>div>a{
-            
+        .navb-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+            align-items: center;
+            justify-content: center;
+            align-content: center;
+            height: 10vh;
+            background-color: darkblue;
+            padding-left: 0px;
+            grid-gap: 0.1fr;
+        }
+        .button{
+            font-size:1.4vw;
+            border-color:white;
             color:white;
-            font-size:1.5vw;
-            text-decoration:none;
-            cursor:pointer;
             transition:250ms;
             }
-        .navb-grid > div  :hover {
-            color:gold;
+        .button:hover{
+            background-color:white;
+            color:black;
+        }
+            .navb-grid > * {
+                margin: auto;
+            }
+            .navb-grid > div > form> a {
+                color: white;
+                font-size: 1.5vw;
+                text-decoration: none;
+                cursor: pointer;
+                transition: 250ms;
+            }
+            .navb-grid > div > a {
+                color: white;
+                font-size: 1.5vw;
+                text-decoration: none;
+                cursor: pointer;
+                transition: 250ms;
+            }
 
+            .navb-grid > div :hover {
+                color: dimgrey;
+            }
+
+        .tbdiv {
+            padding: 15px;
         }
-        .tbdiv{
-            padding:15px;
+
+        table {
+            font-size:1.2vw;
         }
-        table{
-            margin-left:2vw;
+
+        .tb {
+            font-size: 1.2vw;
+            width: 90%;
         }
+
     </style>
 </head>
 <body>
     <div class="navb-grid">
         <div>
-            <a href="AvailableRestaurants">
+            <a href="https://localhost:44370/Customer/AvailableRestaurants">
                 Avaiable restaurants
             </a>
         </div>
         <div>
-            <a>
+            <a href="https://localhost:44370/Customer/FollowedRestaurants">
                 Followed Restaurants
             </a>
         </div>
         <div>
-            <a>
+            <a href="https://localhost:44370/Customer/MyOrders">
                 My orders
             </a>
         </div>
         <div>
-            <a>
+            <a href="https://localhost:44370/Customer/MakeAnOrder">
                 Make an order
             </a>
         </div>
-        <div class="navbar-collapse collapse" style="margin-right:2vw;margin-top:-2vh;">
-            @Html.Partial("_LoginPartial")
+        <div>
+            <a href="Profile">
+                Profile
+            </a>
+        </div>
+        <div>
+            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+            {
+                @Html.AntiForgeryToken()
+                <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+
+            }
+
         </div>
     </div>
-    <div class="tbdiv">
-    <table id="restaurants" class="table">
+    <div class="tbdiv ">
+    <table id="restaurants" class="table  tb table-bordered dataTables_info dataTables_length">
         <thead>
             <tr>
                 <th>Username</th>
@@ -110,14 +151,14 @@
                     {
                         data: "Id",
                         render: function (data) {
-                            return "<a href='../Admin/ViewMenu/" + data + "'><button class='btn btn-primary'>View menu</button></a>";
+                            return "<a href='../Customer/ViewMenu/" + data + "'><button class='button btn btn-primary' >View menu</button></a>";
 
                         }
                     },
                     {
                         data: "Id",
                         render: function (data) {
-                            return "<a href='./Follow/" + data + "' class='btn btn-primary'>Follow</a>";
+                            return "<a href='./Follow/" + data + "' class='btn btn-primary button' >Follow</a>";
                         }
                     },
 

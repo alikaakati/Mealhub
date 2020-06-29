@@ -1,0 +1,30 @@
+﻿@model MealHubProject.Models.Product
+@{
+    ViewBag.Title = "EditItem";
+}
+
+@using (Html.BeginForm("UpdateItem", "Restaurant"))
+{
+    <label>Category</label>
+    <select id="Category" name="Category">
+        <option value="Cold beverages">Cold beverages</option>
+        <option value="Hot beverages">Hot beverages</option>
+        <option value="Main dishes">Main dishes</option>
+        <option value="Sandwishes">Sandwishes</option>
+        <option value="Sides">Sides</option>
+    </select>
+
+    @Html.HiddenFor(c=>c.Id)
+    <label>Name</label>
+    @Html.TextBoxFor(m => m.Name)
+
+    <label>Price</label>
+    @Html.TextBoxFor(m => m.Price)
+
+    <label>Description</label>
+    @Html.TextBoxFor(m => m.Description)
+    <button>Submit</button>
+
+
+}
+

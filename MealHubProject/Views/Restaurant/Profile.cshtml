@@ -1,0 +1,67 @@
+﻿@model MealHubProject.Models.Restaurant
+@{
+    ViewBag.Title = "Profile";
+}
+<html>
+<head>
+    <style>
+        .container {
+            width: 20%;
+            height: 50vh;
+            margin-left: 40%;
+            margin-top: 20vh;
+            display: grid;
+            justify-content: center;
+            align-content: center
+        }
+
+            .container > form {
+                display: grid;
+                justify-content: center;
+                align-content: center
+            }
+
+                .container > form > input {
+                    margin-bottom: 2.5vh;
+                    border: 0px;
+                    border: 1px solid black;
+                    border-radius: 5px 5px;
+                    padding: 5px;
+                    color: #444;
+                }
+
+        .submit {
+            background-color: black;
+            color: white;
+            transition: 250ms;
+        }
+
+            .submit:hover {
+                letter-spacing: 1px;
+                color: white;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        @using (Html.BeginForm("UpdateProfile", "Restaurant"))
+        {
+            @Html.TextBoxFor(c => c.Username, new { id = "test", disabled = "disabled", @readonly = "readonly" })
+            <br />
+
+            @Html.TextBoxFor(c => c.Email, new { disabled = "disabled", @readonly = "readonly" })
+            <br />
+
+            @Html.TextBoxFor(c => c.Phone)
+            <br />
+
+            @Html.TextBoxFor(c => c.Address)
+            <br />
+            <button type="submit" class="btn submit">Submit</button>
+
+        }
+    </div>
+
+
+</body>
+</html>

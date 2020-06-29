@@ -1,10 +1,10 @@
 ﻿@model MealHubProject.Models.RegisterViewModel
 @{
-    ViewBag.Title = "AddRestaurant";
+    ViewBag.Title = "AddUser";
 }
 <h1></h1>
 
-@using (Html.BeginForm("RegisterRestaurant", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("RegisterCustomer", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
     <h4>Create a new account.</h4>
@@ -36,6 +36,7 @@
             @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
         </div>
     </div>
+
 
     <div class="form-group">
 

@@ -2,77 +2,196 @@
 @{
     ViewBag.Title = "GetRestaurants";
 }
-<h1></h1>
-<table id="restaurants" class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>View menu</th>
-            <th>Delete</th>
-        </tr>
-    </thead>
-    <tbody>
-
-    </tbody>
-</table>
 
 
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <style>
+        body {
+        }
 
-@section scripts{
-    <script>
-        $(document).ready(function () {
-            $("#restaurants").on("click", ".delete", function () {
-                button = $(this);
-                bootbox.confirm("Are you sure you want to delete this restaurant?", function (result) {
-                    
-                    if (result) {
-                        $.ajax({
-                            url: "../Api/Restaurants/" + button.attr("data-restaurant-id"),
-                            method: "GET",
-                            success: function () {
-                                button.parents("tr").remove();
+        .navb-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            align-items: center;
+            justify-content: center;
+            align-content: center;
+            height: 10vh;
+            background-color: darkblue;
+            padding-left: 0px;
+            grid-gap: 0.1fr;
+        }
+
+        .button {
+            font-size: 1.4vw;
+            border-color: white;
+            color: white;
+            transition: 250ms;
+        }
+
+            .button:hover {
+                background-color: white;
+                color: black;
+            }
+
+        .navb-grid > * {
+            margin: auto;
+        }
+
+        .navb-grid > div > form > a {
+            color: white;
+            font-size: 1.5vw;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 250ms;
+        }
+
+        .navb-grid > div > a {
+            color: white;
+            font-size: 1.5vw;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 250ms;
+        }
+
+        .navb-grid > div :hover {
+            color: dimgray;
+        }
+
+        .tbdiv {
+            padding: 15px;
+        }
+
+        table {
+            font-size: 1.2vw;
+        }
+
+        .tb {
+            font-size: 1.2vw;
+            width: 90%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navb-grid">
+        <div>
+            <a href="https://localhost:44370/Admin/GetRestaurants">
+                Restaurants
+            </a>
+        </div>
+        <div>
+            <a href="https://localhost:44370/Admin/Customers">
+                Customers
+            </a>
+        </div>
+        <div>
+            <a href="https://localhost:44370/Admin/Orders">
+                Orders
+            </a>
+        </div>
+        <div>
+            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+            {
+                @Html.AntiForgeryToken()
+                <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+
+            }
+
+        </div>
+    </div>
+    <table id="restaurants" class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Edit Restaurant</th>
+                <th>View menu</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <a href="AddRestaurant"><button class="btn btn-primary" style="margin-top:2vh;margin-bottom:2vh">Add new restaurant</button></a>
+
+
+    @section scripts{
+        <script>
+            $(document).ready(function () {
+                $("#restaurants").on("click", ".delete", function () {
+                    button = $(this);
+                    bootbox.confirm("Are you sure you want to delete this restaurant?", function (result) {
+
+                        if (result) {
+                            $.ajax({
+                                url: "../Api/Restaurants/" + button.attr("data-restaurant-id"),
+                                method: "GET",
+                                success: function () {
+                                    button.parents("tr").remove();
+                                }
+                            });
+                        }
+                    })
+                });
+
+                $("#restaurants").dataTable({
+                    ajax: {
+                        url: "../Api/Restaurants",
+                        dataSrc: ""
+                    },
+                    columns: [
+                        {
+                            data: "Id",
+                        },
+                        {
+                            data: "Username",
+                        },
+                        {
+                            data: "Email",
+                        },
+                        {
+                            data:"Phone",
+                        },
+                        {
+                            data:"Address",
+                        },
+                        {
+                            data: "Id",
+                            render: function (data) {
+                                return "<a href='../Admin/EditRestaurant/" + data + "'><button class='btn btn-primary'>Edit Restaurant</button></a>";
+
                             }
-                        });
-                    }
-                })
+                        },
+
+                        {
+                            data: "Id",
+                            render: function (data) {
+                                return "<a href='../Admin/ViewMenu/" + data + "'><button class='btn btn-primary'>View menu</button></a>";
+
+                            }
+                        },
+                        {
+                            data: "Id",
+                            render: function (data) {
+                                return "<a href='DeleteRestaurant/" + data + "'><button class='delete btn btn-danger' data-restaurant-id=" + data + ">Delete</button></a>";
+                            }
+                        },
+
+                    ]
+                });
+
+
             });
 
-            $("#restaurants").dataTable({
-                ajax: {
-                    url: "../Api/Restaurants",
-                    dataSrc: ""
-                },
-                columns: [
-                    {
-                        data: "Id",
-                    },
-                    {
-                        data: "Username",
-                    },
-                    {
-                        data: "Email",
-                    },
-                    {
-                        data: "Id",
-                        render: function (data) {
-                            return "<a href='../Admin/ViewMenu/" + data + "'><button class='btn btn-primary'>View menu</button></a>";
-                        
-                        }
-                    },
-                    {
-                        data: "Id",
-                        render: function (data) {
-                            return "<button class='delete btn btn-danger' data-restaurant-id=" + data + ">Delete</button>";
-                        }
-                    },
-
-                ]
-            });
-
-
-        });
-    </script>
-}
+        </script>
+    }
 

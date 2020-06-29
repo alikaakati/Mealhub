@@ -2,40 +2,149 @@
 @{
     ViewBag.Title = "Details";
 }
-
-<h3>
-    Restaurant name : <b>@Model.restaurant.Username</b> <br />
-    Email: <b>@Model.restaurant.Email</b> <br />
-    Phone number : <b>@Model.restaurant.Phone</b> <br />
-    Address : <b>@Model.restaurant.Address</b> <br />
-</h3>
-<table class="products table" id="myTableId">
-    <thead>
-        <tr>
-            <th>Product name</th>
-            <th>Category</th>
-            <th>Description</th>
-            <th>Price</th>
-        </tr>
-    </thead>
-    <tbody>
-
-        @foreach (var x in Model.Products)
-        {
-            <tr>
-                <td>@x.Name</td>
-                <td>@x.Category</td>
-                <td>@x.Description</td>
-                <td>@x.Price</td>
-            </tr>
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <style>
+        body {
         }
-    </tbody>
-</table>
 
-@section scripts{
-    <script>
-        $(document).ready(function () {
-            $("#myTableId").dataTable();
-        });
-    </script>
-}
+        .navb-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+            align-items: center;
+            justify-content: center;
+            align-content: center;
+            height: 10vh;
+            background-color: grey;
+            padding-left: 0px;
+            grid-gap: 0.1fr;
+        }
+
+        .button {
+            font-size: 1.4vw;
+            border-color: white;
+            color: white;
+            transition: 250ms;
+        }
+
+            .button:hover {
+                background-color: white;
+                color: black;
+            }
+
+        .navb-grid > * {
+            margin: auto;
+        }
+
+        .navb-grid > div > form > a {
+            color: white;
+            font-size: 1.5vw;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 250ms;
+        }
+
+        .navb-grid > div > a {
+            color: white;
+            font-size: 1.5vw;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 250ms;
+        }
+
+        .navb-grid > div :hover {
+            color: gold;
+        }
+
+        .tbdiv {
+            padding: 15px;
+        }
+
+        table {
+            width: 15vw;
+            font-size:1.2vw;
+        }
+
+        .tb {
+            font-size: 1.2vw;
+            width: 90%;
+        }
+    </style>
+</head>
+<body>
+    <div class="navb-grid">
+        <div>
+            <a href="AvailableRestaurants">
+                Avaiable restaurants
+            </a>
+        </div>
+        <div>
+            <a href="FollowedRestaurants">
+                Followed Restaurants
+            </a>
+        </div>
+        <div>
+            <a href="MyOrders">
+                My orders
+            </a>
+        </div>
+        <div>
+            <a href="MakeAnOrder">
+                Make an order
+            </a>
+        </div>
+        <div>
+            <a href="Profile">
+                Profile
+            </a>
+        </div>
+        <div>
+            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+            {
+                @Html.AntiForgeryToken()
+                <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+
+            }
+
+        </div>
+    </div>
+    <h3>
+        Restaurant name : <b>@Model.restaurant.Username</b> <br />
+        Email: <b>@Model.restaurant.Email</b> <br />
+        Phone number : <b>@Model.restaurant.Phone</b> <br />
+        Address : <b>@Model.restaurant.Address</b> <br />
+    </h3>
+    <table class="products table" id="myTableId">
+        <thead>
+            <tr>
+                <th>Product name</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var x in Model.Products)
+            {
+                <tr>
+                    <td>@x.Name</td>
+                    <td>@x.Category</td>
+                    <td>@x.Description</td>
+                    <td>@x.Price</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @section scripts{
+        <script>
+            $(document).ready(function () {
+                $("#myTableId").dataTable();
+            });
+        </script>
+    }

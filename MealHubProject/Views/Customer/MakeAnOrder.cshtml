@@ -1,7 +1,8 @@
 ﻿@model List<MealHubProject.Models.Restaurant>
 @{
-    ViewBag.Title = "FollowedRestaurants";
+    ViewBag.Title = "MakeAnOrder";
 }
+
     <html>
     <head>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
@@ -57,7 +58,7 @@
             }
 
             .navb-grid > div :hover {
-                color: dimgray;
+                color:dimgrey;
             }
 
             .tbdiv {
@@ -65,6 +66,7 @@
             }
 
             table {
+                width: 15vw;
                 font-size: 1.2vw;
             }
 
@@ -111,48 +113,52 @@
 
             </div>
         </div>
-            <table id="restaurants" class="table  table-bordered dataTables_info dataTables_length">
 
-                <thead>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Restaurant name</th>
+                    <th>Address</th>
+                    <th>Phone</th>
+                    <th>View menu</th>
+                    <th>Make an order</th>
+
+                </tr>
+
+            </thead>
+            <tbody>
+                @foreach (var restaurant in Model)
+                {
                     <tr>
-                        <th>Restaurant name</th>
-                        <th>View profile</th>
-                        <th>Make an order</th>
-                        <th>Unfollow</th>
+                        <td>
+                            <b>@restaurant.Username</b>
+                        </td>
+                        <td>
+                            @restaurant.Address
+                        </td>
+                        <td>
+                            @restaurant.Phone
+                        </td>
+                        <td>
+                            <a href="/Customer/FollowedRestaurants/Details/@restaurant.Username">
+                                <button class="btn btn-primary" style="font-size:1.2vw">View Profile</button>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="../Customer/OrderADelivery/@restaurant.Username">
+                                <button class="btn btn-primary" style="font-size:1.2vw">
+                                    Order
+                                </button>
+                            </a>
+                        </td>
+
+
+
                     </tr>
+                }
 
-                </thead>
-                <tbody>
-                    @foreach (var restaurant in Model)
-                    {
-                        <tr>
-                            <td>
-                                <b>@restaurant.Username</b>
-                            </td>
-                            <td>
-                                <a href="/Customer/FollowedRestaurants/Details/@restaurant.Username" >
-                                    <button class="btn btn-primary" style="font-size:1.2vw">View Profile</button>
-                                </a>
-                            </td>
-
-
-
-                            <td>
-                                <a href="/Customer/OrderADelivery/@restaurant.Username">
-                                    <button class="btn btn-primary" style="font-size:1.2vw">Order</button>
-                                </a>
-                            </td>
-                            <td>
-                                <a href="Unfollow/@restaurant.Id" class="btn btn-primary" style="font-size:1.2vw">
-                                    Unfollow
-                                </a>
-                            </td>
-                        </tr>
-                    }
-
-                </tbody>
-            </table>
-        
+            </tbody>
+        </table>
         @section scripts{
             <script>
                 $(document).ready(function () {
@@ -160,3 +166,4 @@
                 });
             </script>
         }
+

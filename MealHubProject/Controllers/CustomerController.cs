@@ -31,7 +31,7 @@ namespace MealHubProject.Controllers
         {
             var UserId = User.Identity.GetUserId();
             var customer = db.Customers.SingleOrDefault(c => c.ApplicationUserId == UserId);
-            return View(customer);
+            return RedirectToAction("MakeAnOrder", "Customer");
         }
         [Route("Customer/AvailableRestaurants")]
         // GET: Customer
@@ -46,11 +46,40 @@ namespace MealHubProject.Controllers
         // GET: Customer
         public ActionResult Profile()
         {
-
-            return View();
+            var current = User.Identity.GetUserId();
+            var customer = db.Customers.Single(c=>c.ApplicationUserId == current);
+            return View(customer);
         }
 
+        [Route("Customer/UpdateProfile")]
+        public ActionResult UpdateProfile(Customer c)
+        {
+            var current = User.Identity.GetUserId();
+            var customer = db.Customers.Single(x =>x.ApplicationUserId == current);
+            if(c.Phone != null && c.Phone != 0)
+            {
+                customer.Phone = c.Phone;
 
+            }
+            if(c.Address != null && c.Address != "")
+            {
+                customer.Address = c.Address;
+            }
+            
+
+            db.SaveChanges();
+            return RedirectToAction("Profile", "Customer");
+
+        }
+        [Route("Customer/MakeAnOrder")]
+        public ActionResult MakeAnOrder()
+        {
+            var query = (from r in db.Restaurants
+                         select r)
+                        .ToList();
+
+            return View(query);
+        }
         [Route("Customer/FollowedRestaurants")]
         // GET: Customer
         public ActionResult FollowedRestaurants()
@@ -63,7 +92,59 @@ namespace MealHubProject.Controllers
 
             return View(query);
         }
+        [Route("Customer/ViewMenu/{rId}")]
+        public ActionResult ViewMenu(int rId) {
+            var restaurant = db.Restaurants.Single(c=>c.Id==rId);
+            var products = (from p in db.Products
+                            join r in db.Restaurants on p.restaurantID equals r.Id
+                            where r.Id == rId
+                            select p).ToList();
+            ProductsListViewModel result = new ProductsListViewModel();
+            result.restaurant = restaurant;
+            result.Products = products;
+            return View(result);
+        }
+        [Route("Customer/MyOrders")]
+        public ActionResult MyOrders()
+        {
+            var current = User.Identity.GetUserId();
+            var user = db.Customers.Single(c => c.ApplicationUserId == current);
+            var orders = (from o in db.Orders
+                          join c in db.Customers on o.CustomerId equals c.Id
+                          where c.Id == user.Id && o.CustomerId == user.Id
+                          select o).ToList();
+            var products = new List<Product>();
+            List<OrderViewModel> result = new List<OrderViewModel>();
 
+            for (int i = 0; i < orders.Count; i++)
+            {
+                var temp = orders[i].Id;
+                var thisOrder = orders[i];
+                var productsforthisorder =
+                    (from pio in db.ProductsInOrder
+                     join p in db.Products on pio.ProductID equals p.Id
+                     join o in db.Orders on pio.OrderID equals o.Id
+                     where o.Id == temp
+                     select p
+                    ).ToList();
+                var j = new OrderViewModel();
+                j.customer = user;
+                j.order = orders[i];
+                var restaurant = db.Restaurants.Single(c=>c.Id == thisOrder.RestaurantId);
+                j.restaurant = restaurant;
+                j.products = productsforthisorder;
+                result.Add(j);
+            }
+            return View(result);
+        }
+        [Route("Customer/CancelOrder/{oId}")]
+        public ActionResult CancelOrder(int oId)
+        {
+            var order = db.Orders.Single(c => c.Id == oId);
+            db.Orders.Remove(order);
+            db.SaveChanges();
+            return RedirectToAction("MyOrders","Customer");
+        }
         [Route("Customer/FollowedRestaurants/Details/{rUsername}")]
         public ActionResult Details(string rUsername)
         {
@@ -77,6 +158,7 @@ namespace MealHubProject.Controllers
             list.restaurant = res;
             return View(list);
         }
+        
 
         [Route("Customer/ContinueToAddress")]
         public ActionResult ContinueToAddress()
@@ -129,27 +211,31 @@ namespace MealHubProject.Controllers
                          select pr).ToList();
             var Order = db.Orders.OrderByDescending(c => c.Id).First(c => c.CustomerId == customer.Id);
             var OrderID = Order.Id;
-            ProductsInOrder prod = new ProductsInOrder();
-            prod.OrderID = OrderID;
+
 
             var anotherquery = (from p in db.ProductsToOrder
                                 join c in db.Customers on p.CustomerID equals c.Id
                                 join pr in db.Products on p.ProductID equals pr.Id
                                 where c.Id == customer.Id
                                 select p).ToList();
-
+            var total = 0;
             for (int i = 0; i < query.Count; i++)
             {
+
+                var prod = new ProductsInOrder();
+                prod.OrderID = OrderID;
                 prod.ProductID = query[i].Id;
                 db.ProductsInOrder.Add(prod);
+                db.SaveChanges();
 
             }
+
             for (int i = 0; i < anotherquery.Count; i++)
             {
                 db.ProductsToOrder.Remove(anotherquery[i]);
+                db.SaveChanges();
             }
 
-            db.SaveChanges();
             return RedirectToAction("Index", "Customer");
         }
 

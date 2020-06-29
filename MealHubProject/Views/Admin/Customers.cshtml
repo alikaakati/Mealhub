@@ -1,7 +1,8 @@
-﻿@model MealHubProject.ViewModels.OrderViewModel
+﻿
 @{
-    ViewBag.Title = "OrderADelivery";
+    ViewBag.Title = "Customers";
 }
+
 
 <html>
 <head>
@@ -15,7 +16,7 @@
 
         .navb-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
             align-items: center;
             justify-content: center;
             align-content: center;
@@ -58,7 +59,7 @@
         }
 
         .navb-grid > div :hover {
-            color: dimgrey;
+            color: dimgray;
         }
 
         .tbdiv {
@@ -78,28 +79,18 @@
 <body>
     <div class="navb-grid">
         <div>
-            <a href="https://localhost:44370/Customer/AvailableRestaurants">
-                Avaiable restaurants
+            <a href="https://localhost:44370/Admin/GetRestaurants">
+                Restaurants
             </a>
         </div>
         <div>
-            <a href="https://localhost:44370/Customer/FollowedRestaurants">
-                Followed Restaurants
+            <a href="https://localhost:44370/Admin/Customers">
+                Customers
             </a>
         </div>
         <div>
-            <a href="https://localhost:44370/Customer/MyOrders">
-                My orders
-            </a>
-        </div>
-        <div>
-            <a href="https://localhost:44370/Customer/MakeAnOrder">
-                Make an order
-            </a>
-        </div>
-        <div>
-            <a href="Profile">
-                Profile
+            <a href="https://localhost:44370/Admin/Orders">
+                Orders
             </a>
         </div>
         <div>
@@ -112,81 +103,79 @@
 
         </div>
     </div>
-    <table class="products table" id="myTableId">
+
+    <table id="restaurants" class="table">
         <thead>
             <tr>
-                <th>Product name</th>
-                <th>Category</th>
-                <th>Add to cart</th>
-
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>View menu</th>
+                <th>Delete</th>
             </tr>
         </thead>
         <tbody>
-
-            @for (int i = 0; i < Model.products.Count; i++)
-            {
-                <tr>
-                    <td>@Model.products[i].Name</td>
-                    <td>@Model.products[i].Price</td>
-                    <td>
-                        @using (Html.BeginForm("AddToCart", "Customer"))
-                        {
-                            @Html.HiddenFor(c => c.products[i].Id)
-                            <a href="../AddToCart/@Model.restaurant.Id/@Model.products[i].Id" class="btn btn-primary" style="font-size:1.2vw">Add to Cart</a>
-
-                        }
-                    </td>
-
-                </tr>
-            }
-
         </tbody>
     </table>
+    <a href="AddUser">
+        <button class="btn btn-primary">Add user</button>
+    </a>
 
-    <table class="table table-bordered table-hover " id="MyItems">
-        <thead class="">
-            <tr>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Remove product</th>
-            </tr>
-        </thead>
-        <tbody class="cartbody">
-        </tbody>
-    </table>
-    @using (Html.BeginForm("ContinueToAddress", "Customer"))
-    {
-        <button class="btn btn-primary" style="font-size:1.2vw">
-            Continue
-        </button>
 
-    }
+
     @section scripts{
         <script>
             $(document).ready(function () {
-                $("#myTableId").dataTable();
+                $("#restaurants").on("click", ".delete", function () {
+                    button = $(this);
+                    bootbox.confirm("Are you sure you want to delete this restaurant?", function (result) {
 
+                        if (result) {
+                            $.ajax({
+                                url: "../Api/Restaurants/" + button.attr("data-restaurant-id"),
+                                method: "GET",
+                                success: function () {
+                                    button.parents("tr").remove();
+                                }
+                            });
+                        }
+                    })
+                });
 
-
-                $("#MyItems").dataTable({
+                $("#restaurants").dataTable({
                     ajax: {
-                        url: "../../Api/ProductsToOrder",
+                        url: "../Api/Customers",
                         dataSrc: ""
                     },
                     columns: [
                         {
-                            data: "Name",
+                            data: "Id",
                         },
                         {
-                            data: "Price",
+                            data: "Username",
+                        },
+                        {
+                            data: "Email",
+                        },
+                        {
+                            data: "Phone",
+                        },
+                        {
+                            data: "Address",
+                        },
+                        {
+                            data: "Id",
                             render: function (data) {
-                                return "<span class='price'>" + data + "$</span>";
+                                return "<a href='../Admin/EditUser/" + data + "'><button class='btn btn-primary'>Edit user</button></a>";
+
                             }
                         },
                         {
                             data: "Id",
                             render: function (data) {
-                                return "<a href='../RemoveFromCart/" + data + "' class='btn btn-danger' style='font-size:1.2vw'>Remove</a>";
+                                return "<a href='../Admin/DeleteUser/"+data+"'><button class='delete btn btn-danger' data-restaurant-id=" + data + ">Delete</button></a>";
                             }
                         },
 
@@ -197,3 +186,4 @@
             });
         </script>
     }
+

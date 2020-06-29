@@ -1,6 +1,6 @@
-﻿@model List<MealHubProject.Models.Restaurant>
+﻿@model List<MealHubProject.ViewModels.OrderViewModel>
 @{
-    ViewBag.Title = "FollowedRestaurants";
+    ViewBag.Title = "MyOrders";
 }
     <html>
     <head>
@@ -57,7 +57,7 @@
             }
 
             .navb-grid > div :hover {
-                color: dimgray;
+                color:dimgrey;
             }
 
             .tbdiv {
@@ -65,6 +65,7 @@
             }
 
             table {
+                width: 15vw;
                 font-size: 1.2vw;
             }
 
@@ -111,52 +112,47 @@
 
             </div>
         </div>
-            <table id="restaurants" class="table  table-bordered dataTables_info dataTables_length">
 
-                <thead>
+        <table class="table  tb table-bordered dataTables_info dataTables_length">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Restaurant</th>
+                    <th>Address</th>
+                    <th>Total</th>
+                    <th>Products</th>
+                    <th>Status</th>
+                    <th>Option</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Count; i++)
+                {
                     <tr>
-                        <th>Restaurant name</th>
-                        <th>View profile</th>
-                        <th>Make an order</th>
-                        <th>Unfollow</th>
+                        <td>@Model[i].order.Id</td>
+                        <td>@Model[i].restaurant.Username</td>
+                        <td>@Model[i].order.Address</td>
+                        <td>@Model[i].order.Total</td>
+                        <td>
+                            @for (int j = 0; j < Model[i].products.Count; j++)
+                            {
+                                @Model[i].products[j].Name<br />
+                            }
+                        </td>
+                        <td>@Model[i].order.Status</td>
+                        @if (@Model[i].order.Status == "Pending")
+                        {
+                            <td>
+                                <a href="./CancelOrder/@Model[i].order.Id" style="font-size:1.2vw" class="btn btn-danger">Cancel Order</a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+
                     </tr>
+                }
+            </tbody>
+        </table>
 
-                </thead>
-                <tbody>
-                    @foreach (var restaurant in Model)
-                    {
-                        <tr>
-                            <td>
-                                <b>@restaurant.Username</b>
-                            </td>
-                            <td>
-                                <a href="/Customer/FollowedRestaurants/Details/@restaurant.Username" >
-                                    <button class="btn btn-primary" style="font-size:1.2vw">View Profile</button>
-                                </a>
-                            </td>
-
-
-
-                            <td>
-                                <a href="/Customer/OrderADelivery/@restaurant.Username">
-                                    <button class="btn btn-primary" style="font-size:1.2vw">Order</button>
-                                </a>
-                            </td>
-                            <td>
-                                <a href="Unfollow/@restaurant.Id" class="btn btn-primary" style="font-size:1.2vw">
-                                    Unfollow
-                                </a>
-                            </td>
-                        </tr>
-                    }
-
-                </tbody>
-            </table>
-        
-        @section scripts{
-            <script>
-                $(document).ready(function () {
-                    $(".table").dataTable();
-                });
-            </script>
-        }

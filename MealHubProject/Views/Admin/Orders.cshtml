@@ -1,19 +1,19 @@
 ﻿@model List<MealHubProject.ViewModels.OrderViewModel>
 @{
-    ViewBag.Title = "ViewOrders";
+    ViewBag.Title = "Orders";
 }
 
 
-<table class="table">
+<table class="table" id="table">
     <thead>
         <tr>
             <th>Order ID</th>
             <th>Customer</th>
+            <th>Restaurant</th>
             <th>Address</th>
             <th>Total</th>
             <th>Products</th>
             <th>Status</th>
-            <th>Option</th>
         </tr>
     </thead>
     <tbody>
@@ -22,6 +22,7 @@
             <tr>
                 <td>@Model[i].order.Id</td>
                 <td>@Model[i].customer.Username</td>
+                <td>@Model[i].restaurant.Username</td>
                 <td>@Model[i].order.Address</td>
                 <td>@Model[i].order.Total</td>
                 <td>
@@ -31,21 +32,15 @@
                     }
                 </td>
                 <td>@Model[i].order.Status</td>
-                @if (@Model[i].order.Status == "Pending")
-                {
-            <td>
-                <a href="./AcceptOrder/@Model[i].order.Id" class="btn btn-primary">Accept Order</a>
-                <a href="./RefuseOrder/@Model[i].order.Id" class="btn btn-danger">Refuse Order</a>
-
-            </td>
-                }
-                else
-                {
-                    <td></td>
-                }
-
             </tr>
         }
     </tbody>
 </table>
 
+
+@section scripts{
+    <script>
+        $("#table").dataTable();
+    </script>
+
+}

@@ -88,6 +88,10 @@ namespace MealHubProject.Models
         [Required]
         [Display(Name = "Phone")]
         public int Phone { get; set; }
+
+        [Required]
+        [Display(Name ="Address")]
+        public string Address { get; set; }
     }
 
     public class ResetPasswordViewModel

@@ -2,33 +2,141 @@
 @{
     ViewBag.Title = "ViewMenu";
 }
-<table id="menu" class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Category</th>
-            <th>Description</th>
-            <th>Discount</th>
-            <th>Delete Item</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            @foreach (var product in Model.Products)
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <style>
+        body {
+        }
+
+        .navb-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            align-items: center;
+            justify-content: center;
+            align-content: center;
+            height: 10vh;
+            background-color: darkblue;
+            padding-left: 0px;
+            grid-gap: 0.1fr;
+        }
+
+        .button {
+            font-size: 1.4vw;
+            border-color: white;
+            color: white;
+            transition: 250ms;
+        }
+
+            .button:hover {
+                background-color: white;
+                color: black;
+            }
+
+        .navb-grid > * {
+            margin: auto;
+        }
+
+        .navb-grid > div > form > a {
+            color: white;
+            font-size: 1.5vw;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 250ms;
+        }
+
+        .navb-grid > div > a {
+            color: white;
+            font-size: 1.5vw;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 250ms;
+        }
+
+        .navb-grid > div :hover {
+            color: dimgray;
+        }
+
+        .tbdiv {
+            padding: 15px;
+        }
+
+        table {
+            font-size: 1.2vw;
+        }
+
+        .tb {
+            font-size: 1.2vw;
+            width: 90%;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="navb-grid">
+        <div>
+            <a href="https://localhost:44370/Restaurant/ViewMenu/@Model.restaurant.Id">
+                View menu
+            </a>
+        </div>
+        <div>
+            <a href="https://localhost:44370/Restaurant/ViewOrders">
+                View orders
+            </a>
+        </div>
+        <div>
+            <a href="https://localhost:44370/Restaurant/Profile">
+                Profile
+            </a>
+        </div>
+        <div>
+            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
             {
-                <td>@product.Id</td>
-                <td>@product.Name</td>
-                <td>@product.Category</td>
-                <td>@product.Description</td>
-                <td>@product.Discount%</td>
-                <td><button</a></td>
+                @Html.AntiForgeryToken()
+                <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
 
             }
-        </tr>
-    </tbody>
-</table>
 
+        </div>
+    </div>
+
+    <table id="menu" class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Discount</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var product in Model.Products)
+            {
+                <tr>
+                    <td>@product.Id</td>
+                    <td>@product.Name</td>
+                    <td>@product.Category</td>
+                    <td>@product.Description</td>
+                    <td>@product.Discount%</td>
+                    <td>
+                        <a href="../EditItem/@product.Id" class="btn btn-primary">Edit Item</a>
+                        <a href="../DeleteItem/@product.Id" class="btn btn-danger">Delete item</a>
+                    </td>
+
+                </tr>
+            }
+
+        </tbody>
+    </table>
+    <a href="../AddItem" class="btn btn-primary">Add Item</a>
+
+</body>
+</html>
 @section scripts{
     <script>
         $(document).ready(function () {

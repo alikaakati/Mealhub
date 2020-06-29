@@ -2,6 +2,8 @@
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -174,7 +176,8 @@ namespace MealHubProject.Controllers
                     Username = model.Username,
                     Phone = model.Phone,
                     ApplicationUserId = user.Id,
-                    Email = model.Email
+                    Email = model.Email,
+                    Address=model.Address
                 };
                 var check = db.Customers.SingleOrDefault(c => c.Username == model.Username);
                 if (check != null)
@@ -187,6 +190,7 @@ namespace MealHubProject.Controllers
                     {
 
                     db.Customers.Add(myCustomer);
+
                     db.SaveChanges();
 
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -205,7 +209,103 @@ namespace MealHubProject.Controllers
                 // If we got this far, something failed, redisplay form
                 return View(model);
             }
-        
+
+
+
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegisterCustomer(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var db = new ApplicationDbContext();
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                Customer myCustomer = new Customer()
+                {
+                    Username = model.Username,
+                    Phone = model.Phone,
+                    ApplicationUserId = user.Id,
+                    Email = model.Email,
+                    Address = model.Address
+                };
+                var check = db.Customers.SingleOrDefault(c => c.Username == model.Username);
+                if (check != null)
+                {
+                    return Content("Username already taken");
+                }
+
+                var result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+
+                    db.Customers.Add(myCustomer);
+                    db.SaveChanges();
+
+                    return RedirectToAction("Customers", "Admin");
+                }
+                AddErrors(result);
+            }
+
+            // If we got this far, something failed, redisplay form
+            return RedirectToAction("Customers","Admin");
+        }
+
+
+
+
+
+
+
+
+
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegisterRestaurant(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var db = new ApplicationDbContext();
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                Restaurant myCustomer = new Restaurant()
+                {
+                    Username = model.Username,
+                    Phone = model.Phone,
+                    ApplicationUserId = user.Id,
+                    Email = model.Email,
+                    Address = model.Address
+                };
+                var check = db.Customers.SingleOrDefault(c => c.Username == model.Username);
+                if (check != null)
+                {
+                    return Content("Username already taken");
+                }
+
+                var result = await UserManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+
+                    db.Restaurants.Add(myCustomer);
+                    db.SaveChanges();
+
+                    return RedirectToAction("GetRestaurants", "Admin");
+                }
+                AddErrors(result);
+            }
+
+            // If we got this far, something failed, redisplay form
+            return Redirect(HttpContext.Request.UrlReferrer.AbsoluteUri);
+        }
+
+
+
+
+
 
         //
         // GET: /Account/ConfirmEmail
@@ -427,7 +527,7 @@ namespace MealHubProject.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         //

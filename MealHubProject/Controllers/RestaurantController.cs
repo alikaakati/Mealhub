@@ -25,12 +25,19 @@ namespace MealHubProject.Controllers
         [Route("Restaurant/Index")]
         public ActionResult Index()
         {
-            return View();
+            var current = User.Identity.GetUserId();
+            var restaurant = db.Restaurants.Single(c=>c.ApplicationUserId == current);
+            var url = "https://localhost:44370/Restaurant/ViewMenu/" + restaurant.Id;
+            return Redirect(url);
         }
         [Route("Restaurant/ViewMenu/{id}")]
         public ActionResult ViewMenu(int id)
         {
             var restaurant = db.Restaurants.SingleOrDefault(c => c.Id == id);
+            if(restaurant.Id != id)
+            {
+                return Content("You cannot access this page");
+            }
             var products = (from p in db.Products
                             join r in db.Restaurants on p.restaurantID equals r.Id
                             where r.Id == id
@@ -46,33 +53,89 @@ namespace MealHubProject.Controllers
         {
             return View();
         }
-        [Route("Restaurant/UpdateMenu")]
-        public ActionResult UpdateMenu()
+        [Route("Restaurant/EditItem/{itemId}")]
+        public ActionResult EditItem(int itemId)
         {
-            return View();
+            var product = db.Products.Single(c=>c.Id == itemId);
+            return View(product);
         }
 
+        [Route("Restaurant/UpdateItem")]
+        public ActionResult UpdateItem(Product newp)
+        {
+            var p = db.Products.Single(c=>c.Id == newp.Id);
+            p.Name = newp.Name;
+            p.Price = newp.Price;
+            p.Category = newp.Category;
+            p.Description = newp.Description;
+            p.Discount = newp.Discount;
+            db.SaveChanges();
+            var current = User.Identity.GetUserId();
+            var restaurant = db.Restaurants.Single(c => c.ApplicationUserId == current);
+            var url = "https://localhost:44370/Restaurant/ViewMenu/" + restaurant.Id;
+            return Redirect(url);
+        }
+        [Route("Restaurant/Profile")]
+        public ActionResult Profile()
+        {
+            var current = User.Identity.GetUserId();
+            var restaurant = db.Restaurants.Single(c=>c.ApplicationUserId == current);
+            return View(restaurant);
+        }
+        [Route("Restaurant/UpdateProfile")]
+        public ActionResult UpdateProfile(Restaurant c)
+        {
+            var current = User.Identity.GetUserId();
+            var customer = db.Restaurants.Single(x => x.ApplicationUserId == current);
+            if (c.Phone != null && c.Phone != 0)
+            {
+                customer.Phone = c.Phone;
 
+            }
+            if (c.Address != null && c.Address != "")
+            {
+                customer.Address = c.Address;
+            }
+
+
+            db.SaveChanges();
+            return RedirectToAction("Profile", "Restaurant");
+
+        }
         [Route("Restaurant/ViewOrders")]
         public ActionResult ViewOrders()
         {
 
-            var rAppUserId = User.Identity.GetUserId();
-            var restaurant = db.Restaurants.Single(c => c.ApplicationUserId == rAppUserId);
-            var rId = restaurant.Id;
+            var current = User.Identity.GetUserId();
+            var restaurant = db.Restaurants.Single(c => c.ApplicationUserId == current);
             var orders = (from o in db.Orders
-                         join r in db.Restaurants on o.RestaurantId equals r.Id
-                         where r.Id == rId
-                         select o).ToList();
-            var customers = (from c in db.Customers
-                          join o in db.Orders on c.Id equals o.CustomerId
-                          select c).ToList();
+                          join r in db.Restaurants on o.RestaurantId equals r.Id
+                          where r.Id == restaurant.Id && o.RestaurantId == restaurant.Id
+                          select o).ToList();
+            var products = new List<Product>();
+            List<OrderViewModel> result = new List<OrderViewModel>();
 
-            OrderListViewModel ordersList = new OrderListViewModel();
-            ordersList.orders = orders;
-            ordersList.customers = customers;
-            ordersList.restaurant = restaurant;
-            return View(ordersList);
+            for (int i = 0; i < orders.Count; i++)
+            {
+                var temp = orders[i].Id;
+                var thisOrder = orders[i];
+                var productsforthisorder =
+                    (from pio in db.ProductsInOrder
+                     join p in db.Products on pio.ProductID equals p.Id
+                     join o in db.Orders on pio.OrderID equals o.Id
+                     where o.Id == temp
+                     select p
+                    ).ToList();
+                var j = new OrderViewModel();
+                var customer = db.Customers.Single(c => c.Id == thisOrder.CustomerId);
+
+                j.customer = customer;
+                j.order = orders[i];
+                j.restaurant = restaurant;
+                j.products = productsforthisorder;
+                result.Add(j);
+            }
+            return View(result);
         }
         [Route("Restaurant/AcceptOrder/{orderId}")]
         public ActionResult AcceptOrder(int orderId)
@@ -90,11 +153,28 @@ namespace MealHubProject.Controllers
             db.SaveChanges();
             return RedirectToAction("ViewOrders","Restaurant");
         }
-
+        [Route("Restaurant/DeleteItem/{itemId}")]
+        public ActionResult DeleteItem(int itemId)
+        {
+            var item = db.Products.Remove(db.Products.Single(c=>c.Id == itemId));
+            db.SaveChanges();
+            var current = User.Identity.GetUserId();
+            var restaurant = db.Restaurants.Single(c => c.ApplicationUserId == current);
+            var url = "https://localhost:44370/Restaurant/ViewMenu/" + restaurant.Id;
+            return Redirect(url);
+        }
         [Route("Restaurant/DoAddItem")]
         public ActionResult DoAddItem(Product p)
         {
-            return RedirectToAction("ViewMenu","Restaurant");
+
+            var current = User.Identity.GetUserId();
+            var restaurant = db.Restaurants.Single(c=>c.ApplicationUserId==current);
+            p.restaurantID = restaurant.Id;
+            p.Discount = 0;
+            db.Products.Add(p);
+            db.SaveChanges();
+            var url = "https://localhost:44370/Restaurant/ViewMenu/"+restaurant.Id;
+            return Redirect(url);
         }
 
     }

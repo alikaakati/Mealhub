@@ -304,6 +304,7 @@
     <Compile Include="ViewModels\ProductsListViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-pulse.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -554,6 +555,16 @@
     <Content Include="Views\Customer\PrintProducts.cshtml" />
     <Content Include="Views\Customer\AddToCart.cshtml" />
     <Content Include="Views\Customer\ContinueToAddress.cshtml" />
+    <Content Include="Views\Customer\ViewMenu.cshtml" />
+    <Content Include="Views\Customer\MyOrders.cshtml" />
+    <Content Include="Views\Restaurant\EditItem.cshtml" />
+    <Content Include="Views\Customer\MakeAnOrder.cshtml" />
+    <Content Include="Views\Restaurant\Profile.cshtml" />
+    <Content Include="Views\Admin\Customers.cshtml" />
+    <Content Include="Views\Admin\AddUser.cshtml" />
+    <Content Include="Views\Admin\EditUser.cshtml" />
+    <Content Include="Views\Admin\EditRestaurant.cshtml" />
+    <Content Include="Views\Admin\Orders.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
